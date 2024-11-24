@@ -25,6 +25,7 @@ TMP_FOLDER_PATH = "texture/"
 TMP_TEXTURE_PATH = TMP_FOLDER_PATH
 TMP_FILE_PATH = "tmp.dae"
 
+principled_bsdf_name = "Principled BSDF"
 
 def urdf_cleanup(file_path: str) -> str:
     tree = ElementTree.parse(file_path)
@@ -208,7 +209,7 @@ def merge_materials(should_check_material_name: bool) -> None:
             mat = material_slot.material
             if mat is None or not mat.use_nodes:
                 continue
-            mat_base_color = mat.node_tree.nodes["Principled BSDF"].inputs.get("Base Color")
+            mat_base_color = mat.node_tree.nodes[principled_bsdf_name].inputs.get("Base Color")
             is_mat_unique = True
             for mat_unique in mat_uniques:
                 # Level 1: Check for equalness
@@ -237,7 +238,7 @@ def merge_materials(should_check_material_name: bool) -> None:
                         continue
 
                 # Level 3: Check for content equalness
-                mat_unique_base_color = mat_unique.node_tree.nodes["Principled BSDF"].inputs.get("Base Color")
+                mat_unique_base_color = mat_unique.node_tree.nodes[principled_bsdf_name].inputs.get("Base Color")
                 if (not mat_base_color.is_linked) and (not mat_unique_base_color.is_linked):
                     # Merge duplicate materials based on their Base Color
                     if [i for i in mat_base_color.default_value] == [i for i in mat_unique_base_color.default_value]:
@@ -266,7 +267,7 @@ def merge_materials(should_check_material_name: bool) -> None:
                     mat_uniques.append(mat)
                 else:
                     # Level 3: Check for content equalness
-                    mat_unique_base_color = mat_unique.node_tree.nodes["Principled BSDF"].inputs.get("Base Color")
+                    mat_unique_base_color = mat_unique.node_tree.nodes[principled_bsdf_name].inputs.get("Base Color")
                     is_mat_unique_equal_mat = False
                     if (not mat_base_color.is_linked) and (not mat_unique_base_color.is_linked):
                         # Merge duplicate materials based on their Base Color
@@ -290,7 +291,7 @@ def merge_materials(should_check_material_name: bool) -> None:
 def fix_alpha() -> None:
     for mat in bpy.data.materials:
         if hasattr(mat.node_tree, "nodes"):
-            mat.node_tree.nodes["Principled BSDF"].inputs["Alpha"].default_value = 1.0
+            mat.node_tree.nodes[principled_bsdf_name].inputs["Alpha"].default_value = 1.0
 
 
 def rename_materials(base_name: str) -> None:
@@ -324,6 +325,14 @@ class RobotBuilder:
         self.apply_weld = should_apply_weld
         self.unique_name = unique_name
         self.scale_unit = scale_unit
+        
+        # 判断principled_bsdf_name
+        mat = bpy.data.materials.new("Material")
+        mat.use_nodes = True
+        print("principled_bsdf_name: ",mat.node_tree.nodes[0].name)
+        global principled_bsdf_name
+        principled_bsdf_name = mat.node_tree.nodes[0].name
+        
         self.build_robot()
         if should_merge_duplicate_materials:
             merge_materials(should_check_material_name)
@@ -562,7 +571,7 @@ class RobotBuilder:
                 material = bpy.data.materials.new(visual.material.name)
                 if hasattr(visual.material, "color") and visual.material.color and visual.material.color.rgba:
                     material.use_nodes = True
-                    principled_node = material.node_tree.nodes.get("Principled BSDF")
+                    principled_node = material.node_tree.nodes.get(principled_bsdf_name)
                     principled_node.inputs[0].default_value = visual.material.color.rgba
         else:
             material = None
