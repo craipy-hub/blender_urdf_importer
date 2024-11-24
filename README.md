@@ -11,8 +11,8 @@ URDF Importer is an add-on for [Blender](https://www.blender.org/). It supports 
 
 ## Prerequisite
 
-- [Blender >= 3.1.x](https://www.blender.org/download)
-- [ROS or ROS2](https://www.ros.org/)
+- [Blender &gt;= 3.1.x](https://www.blender.org/download)
+- [ROS or ROS2](https://www.ros.org/) (Optional)
 
 ## Installation
 
@@ -40,6 +40,12 @@ Windows: If Blender is installed to i.e. `C:\Program Files\`, run `cmd.exe` as a
 - Verify the installation by opening `File` → `Import`. You should see `URDF (.urdf)` listed in the menu.
 
 https://user-images.githubusercontent.com/64316740/160031703-74b12638-89e8-4aed-a1c0-4ce39fa56783.mp4
+
+## Supported File Path
+
+1. absolute path:  `file:///` or `/xx/xx`
+2. relative path:  `file://` or `./` or `xx/xx/` or `../`
+3. ros package: `package://`
 
 
 ## Quickstart
