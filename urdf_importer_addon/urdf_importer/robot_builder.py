@@ -377,8 +377,12 @@ class RobotBuilder:
                             abs_path = visual.geometry.filename.replace("file://", "")
                         elif visual.geometry.filename.startswith("file://"):
                             abs_path = os.path.join(os.path.dirname(self.file_path), visual.geometry.filename.replace("file://", ""))
+                        elif visual.geometry.filename.startswith("/"):
+                            abs_path = visual.geometry.filename
                         else:
-                            raise NotImplementedError("File path " + rel_path + " is not supported")
+                            # 按照相对路径处理
+                            abs_path = os.path.join(os.path.dirname(self.file_path), visual.geometry.filename)
+                            # raise NotImplementedError("File path " + rel_path + " is not supported")
                     print(abs_path)
                     if not os.path.exists(abs_path):
                         raise FileNotFoundError("File " + abs_path + " does not exist")
