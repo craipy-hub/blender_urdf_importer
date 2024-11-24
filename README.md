@@ -23,7 +23,7 @@ cd <blender_path>/<version>/python/bin/ # For example cd blender-3.1.2-linux-x64
 ./python3.10 -m ensurepip
 ./python3.10 -m pip install --upgrade pip
 ./python3.10 -m pip install pyyaml
-./python3.10 -m pip install rospkg
+./python3.10 -m pip install rospkg (optional for ros)
 ./python3.10 -m pip install urdf_parser_py
 ```
 
